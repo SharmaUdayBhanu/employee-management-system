@@ -1,26 +1,35 @@
-import React from 'react'
-import { createContext } from 'react'
-import { getLocalStorage, setLocalStorage } from '../utils/localStorage';
-import { useState , useEffect} from 'react';
+import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 export const AuthContext = createContext();
 
+const API_URL = "http://localhost:5000/api";
 
-const data = getLocalStorage();
-const AuthProvider = ({children}) => {
-  const [userData, setUserData] = useState(null)
+const AuthProvider = ({ children }) => {
+  const [userData, setUserData] = useState({ employees: [], admin: [] });
+  const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  setLocalStorage()
-  const {employees , admin} = getLocalStorage();
-  setUserData({employees , admin});
-}, [])
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const empRes = await axios.get(`${API_URL}/employees`);
+        // If you add admin endpoint, fetch admin here as well
+        setUserData({ employees: empRes.data });
+      } catch (err) {
+        setUserData({ employees: [], admin: [] });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+
   return (
     <div>
-      <AuthContext.Provider value ={userData}>
-      {children}
-      </AuthContext.Provider>
+      <AuthContext.Provider value={userData}>{children}</AuthContext.Provider>
     </div>
-  )
-}
+  );
+};
 
-export default AuthProvider
+export default AuthProvider;
