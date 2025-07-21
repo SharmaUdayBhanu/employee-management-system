@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5000/api";
 
-const CreateTask = ({ onTaskCreated }) => {
+const CreateTask = ({ onTaskCreated, theme }) => {
   const [form, setForm] = useState({
     email: "",
     taskTitle: "",
@@ -13,6 +13,7 @@ const CreateTask = ({ onTaskCreated }) => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -22,6 +23,7 @@ const CreateTask = ({ onTaskCreated }) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess("");
     try {
       // Fetch employee
       const res = await axios.get(`${API_URL}/employees/${form.email}`);
@@ -71,7 +73,10 @@ const CreateTask = ({ onTaskCreated }) => {
         taskDate: "",
         category: "",
       });
+      setSuccess("Task assigned successfully!");
+      setTimeout(() => setSuccess(""), 3000);
       if (onTaskCreated) onTaskCreated();
+      return;
     } catch (err) {
       setError("Employee not found or error creating task");
     } finally {
@@ -80,14 +85,14 @@ const CreateTask = ({ onTaskCreated }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
       <input
         type="email"
         name="email"
         value={form.email}
         onChange={handleChange}
         placeholder="Employee Email"
-        className="border p-2 rounded w-full"
+        className={theme === "dark" ? "border p-2 rounded w-full bg-[#222] text-white" : "border p-2 rounded w-full bg-white text-black"}
         required
       />
       <input
@@ -96,7 +101,7 @@ const CreateTask = ({ onTaskCreated }) => {
         value={form.taskTitle}
         onChange={handleChange}
         placeholder="Task Title"
-        className="border p-2 rounded w-full"
+        className={theme === "dark" ? "border p-2 rounded w-full bg-[#222] text-white" : "border p-2 rounded w-full bg-white text-black"}
         required
       />
       <textarea
@@ -104,7 +109,7 @@ const CreateTask = ({ onTaskCreated }) => {
         value={form.taskDescription}
         onChange={handleChange}
         placeholder="Task Description"
-        className="border p-2 rounded w-full"
+        className={theme === "dark" ? "border p-2 rounded w-full bg-[#222] text-white" : "border p-2 rounded w-full bg-white text-black"}
         required
       />
       <input
@@ -112,7 +117,7 @@ const CreateTask = ({ onTaskCreated }) => {
         name="taskDate"
         value={form.taskDate}
         onChange={handleChange}
-        className="border p-2 rounded w-full"
+        className={theme === "dark" ? "border p-2 rounded w-full bg-[#222] text-white" : "border p-2 rounded w-full bg-white text-black"}
         required
       />
       <input
@@ -121,13 +126,14 @@ const CreateTask = ({ onTaskCreated }) => {
         value={form.category}
         onChange={handleChange}
         placeholder="Category"
-        className="border p-2 rounded w-full"
+        className={theme === "dark" ? "border p-2 rounded w-full bg-[#222] text-white" : "border p-2 rounded w-full bg-white text-black"}
         required
       />
       {error && <div className="text-red-500">{error}</div>}
+      {success && <div className="text-green-500">{success}</div>}
       <button
         type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+        className={theme === "dark" ? "bg-blue-500 text-white px-4 py-2 rounded w-full md:w-auto" : "bg-blue-300 text-black px-4 py-2 rounded w-full md:w-auto"}
         disabled={loading}
       >
         {loading ? "Creating..." : "Create Task"}

@@ -58,18 +58,18 @@ const NewTask = ({ data, onAccept }) => {
 
   if (!task.newTask && task.active) {
     return (
-      <div className="flex-shrink-0 h-full w-[300px] bg-red-400 rounded-xl p-5">
+      <div className="flex-shrink-0 h-full w-[300px] bg-red-500 rounded-xl p-5">
         <div className="flex justify-between items-center">
-          <h3 className="bg-red-600 px-3 py-1 rounded">{task.category}</h3>
+          <h3 className="bg-white text-red-600 px-3 py-1 rounded">{task.category}</h3>
           <h4 className="text-sm">{task.taskDate}</h4>
         </div>
         <h2 className="mt-5 text-xl font-semibold">{task.taskTitle}</h2>
         <p className="text-sm mt-3">{task.taskDescription}</p>
         <div className="flex justify-between mt-4">
-          <button className="bg-green-500 py-1 px-2 text-sm rounded-sm">
+          <button className="bg-white text-green-600 py-1 px-2 text-sm rounded-sm border border-green-600">
             Mark as completed
           </button>
-          <button className="bg-red-500 py-1 px-2 text-sm rounded-sm">
+          <button className="bg-white text-red-600 py-1 px-2 text-sm rounded-sm border border-red-600">
             Mark as failed
           </button>
         </div>
@@ -78,9 +78,9 @@ const NewTask = ({ data, onAccept }) => {
   }
 
   return (
-    <div className="flex-shrink-0 h-full w-[300px] bg-blue-400 rounded-xl p-5">
+    <div className="flex-shrink-0 h-full w-[300px] bg-blue-500 rounded-xl p-5">
       <div className="flex justify-between items-center">
-        <h3 className="bg-red-600 px-3 py-1 rounded">{task.category}</h3>
+        <h3 className="bg-white text-blue-600 px-3 py-1 rounded">{task.category}</h3>
         <h4 className="text-sm">{task.taskDate}</h4>
       </div>
       <h2 className="mt-5 text-xl font-semibold">{task.taskTitle}</h2>
@@ -88,7 +88,7 @@ const NewTask = ({ data, onAccept }) => {
       <div className="mt-4">
         <button
           onClick={acceptHandler}
-          className="bg-green-500 p-2 rounded"
+          className="bg-white text-green-600 p-2 rounded border border-green-600"
           disabled={!task.newTask || loading}
         >
           {loading ? "Accepting..." : "Accept Task"}

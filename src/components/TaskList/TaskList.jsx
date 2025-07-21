@@ -3,31 +3,30 @@ import AcceptTask from "./AcceptTask";
 import NewTask from "./NewTask";
 import CompleteTask from "./CompleteTask";
 import FailedTask from "./FailedTask";
-const TaskList = ({ data, onAccept }) => {
+const TaskList = ({ data, onAccept, vertical, theme }) => {
   return (
     <div
       id="tasklist"
-      className="mt-10 h-[55%] w-full overflow-x-auto py-5  rounded-xl flex items-center justify-start gap-5 flex-nowrap"
+      className={vertical
+        ? "grid grid-cols-1 gap-4 h-full overflow-y-auto p-2 md:flex md:flex-row md:items-start md:gap-5 md:overflow-x-auto md:h-[55%] md:p-0 md:w-full md:min-w-0"
+        : "grid grid-cols-1 gap-4 p-2 md:flex md:flex-row md:items-start md:gap-5 md:overflow-x-auto md:h-[55%] md:p-0 md:w-full md:min-w-0"
+      }
+      style={{width: '100%'}}
     >
-      {data.tasks.map((elem, idx) => {
-        // Use a unique key for each task (title+date+idx)
-        const taskKey = `${elem.taskTitle}-${elem.taskDate}-${idx}`;
-        if (elem.active) {
-          return (
-            <AcceptTask key={taskKey} data={elem} onStatusChange={onAccept} />
-          );
-        }
-        if (elem.newTask) {
-          return <NewTask key={taskKey} data={elem} onAccept={onAccept} />;
-        }
-        if (elem.completed) {
-          return <CompleteTask key={taskKey} data={elem} />;
-        }
-        if (elem.failed) {
-          return <FailedTask key={taskKey} data={elem} />;
-        }
-        return null;
-      })}
+      {data.tasks.map((elem, idx) => (
+        <div key={idx} className="w-full md:w-[300px] flex-shrink-0">
+          {/* Render the correct task tile */}
+          {elem.active ? (
+            <AcceptTask data={{...elem, email: data.email}} onStatusChange={onAccept} theme={theme} />
+          ) : elem.newTask ? (
+            <NewTask data={{...elem, email: data.email}} onAccept={onAccept} theme={theme} />
+          ) : elem.completed ? (
+            <CompleteTask data={elem} theme={theme} />
+          ) : elem.failed ? (
+            <FailedTask data={elem} theme={theme} />
+          ) : null}
+        </div>
+      ))}
     </div>
   );
 };
