@@ -13,10 +13,10 @@ app.use(bodyParser.json());
 // MongoDB Connection
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/jobportal", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    // Use environment variable for MongoDB URI, fallback to localhost for local dev
+    await mongoose.connect(
+      process.env.MONGODB_URI || "mongodb://localhost:27017/jobportal"
+    );
     console.log("MongoDB connected successfully");
   } catch (err) {
     console.error("MongoDB connection error:", err.message);
@@ -146,7 +146,7 @@ const startServer = async () => {
   });
 };
 
-startServer().catch(err => {
+startServer().catch((err) => {
   console.error("Failed to start server:", err);
   process.exit(1);
 });
