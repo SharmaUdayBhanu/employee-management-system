@@ -10,6 +10,12 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
+// Serve static files from the frontend build
+import path from "path";
+app.use(express.static(path.join(process.cwd(), "backend", "dist")));
+
+// Fallback to index.html for SPA routes (after API routes)
+
 // MongoDB Connection
 const connectDB = async () => {
   try {
