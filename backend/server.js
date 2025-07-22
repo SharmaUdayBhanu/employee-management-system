@@ -2,21 +2,29 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-import path from "path";
-import { fileURLToPath } from "url";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/jobportal")
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+// MongoDB Connection
+const connectDB = async () => {
+  try {
+    await mongoose.connect("mongodb://localhost:27017/jobportal", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("MongoDB connected successfully");
+  } catch (err) {
+    console.error("MongoDB connection error:", err.message);
+    process.exit(1);
+  }
+};
 
-// Define Schemas
+// Schemas
 const taskSchema = new mongoose.Schema({
   active: Boolean,
   newTask: Boolean,
@@ -46,59 +54,99 @@ const adminSchema = new mongoose.Schema({
   password: String,
 });
 
+// Models
 const Employee = mongoose.model("Employee", employeeSchema);
 const Admin = mongoose.model("Admin", adminSchema);
 
-// Routes
+// API Endpoints
+
+// Get all employees
 app.get("/api/employees", async (req, res) => {
-  const employees = await Employee.find();
-  res.json(employees);
-});
-
-app.get("/api/employees/:email", async (req, res) => {
-  const emp = await Employee.findOne({ email: req.params.email });
-  if (emp) res.json(emp);
-  else res.status(404).json({ error: "Not found" });
-});
-
-app.put("/api/employees/:email", async (req, res) => {
-  const emp = await Employee.findOneAndUpdate(
-    { email: req.params.email },
-    req.body,
-    { new: true }
-  );
-  if (emp) res.json(emp);
-  else res.status(404).json({ error: "Not found" });
-});
-
-app.post("/api/employees/:email/tasks", async (req, res) => {
-  const emp = await Employee.findOne({ email: req.params.email });
-  if (emp) {
-    emp.tasks.push(req.body);
-    await emp.save();
-    res.json(emp);
-  } else {
-    res.status(404).json({ error: "Not found" });
+  try {
+    const employees = await Employee.find();
+    res.json(employees);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-app.post("/api/admin/login", async (req, res) => {
-  const { email, password } = req.body;
-  const found = await Admin.findOne({ email, password });
-  if (found) res.json({ success: true });
-  else res.status(401).json({ error: "Invalid credentials" });
+// Get single employee by email
+app.get("/api/employees/:email", async (req, res) => {
+  try {
+    const emp = await Employee.findOne({ email: req.params.email });
+    if (emp) {
+      res.json(emp);
+    } else {
+      res.status(404).json({ error: "Employee not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
-// Setup __dirname for ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Update employee
+app.put("/api/employees/:email", async (req, res) => {
+  try {
+    const emp = await Employee.findOneAndUpdate(
+      { email: req.params.email },
+      req.body,
+      { new: true }
+    );
+    if (emp) {
+      res.json(emp);
+    } else {
+      res.status(404).json({ error: "Employee not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
-// Serve React frontend
-app.use(express.static(path.join(__dirname, "..", "dist")));
+// Add new task to employee
+app.post("/api/employees/:email/tasks", async (req, res) => {
+  try {
+    const emp = await Employee.findOne({ email: req.params.email });
+    if (emp) {
+      emp.tasks.push(req.body);
+      await emp.save();
+      res.json(emp);
+    } else {
+      res.status(404).json({ error: "Employee not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "dist", "index.html"));
+// Admin login
+app.post("/api/admin/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const found = await Admin.findOne({ email, password });
+    if (found) {
+      res.json({ success: true });
+    } else {
+      res.status(401).json({ error: "Invalid credentials" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 // Start server
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const startServer = async () => {
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+startServer().catch(err => {
+  console.error("Failed to start server:", err);
+  process.exit(1);
+});
