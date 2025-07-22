@@ -10,10 +10,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // 1. Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/jobportal", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect("mongodb://localhost:27017/jobportal")
 .then(() => console.log("MongoDB connected"))
 .catch((err) => console.error("MongoDB connection error:", err));
 
