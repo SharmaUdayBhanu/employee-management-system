@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = import.meta.env.VITE_API_URL + "/api";
 
 const AcceptTask = ({ data, onStatusChange }) => {
   const [loading, setLoading] = useState(false);
@@ -82,12 +82,16 @@ const AcceptTask = ({ data, onStatusChange }) => {
   return (
     <div className={`flex-shrink-0 h-full w-[300px] ${bgColor} rounded-xl p-5`}>
       <div className="flex justify-between items-center">
-        <h3 className="bg-white text-red-600 px-3 py-1 rounded">{data.category}</h3>
+        <h3 className="bg-white text-red-600 px-3 py-1 rounded">
+          {data.category}
+        </h3>
         <h4 className="text-sm">{data.taskDate}</h4>
       </div>
       <h2 className="mt-5 text-xl font-semibold">{data.taskTitle}</h2>
       <p className="text-sm mt-3">{data.taskDescription}</p>
-      {success && <div className="text-green-700 font-semibold mt-2">{success}</div>}
+      {success && (
+        <div className="text-green-700 font-semibold mt-2">{success}</div>
+      )}
       {status === "accepted" && (
         <div className="flex justify-between mt-4">
           <button

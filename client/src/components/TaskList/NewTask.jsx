@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = import.meta.env.VITE_API_URL + "/api";
 
 const NewTask = ({ data, onAccept }) => {
   const [task, setTask] = useState(data);
@@ -60,7 +60,9 @@ const NewTask = ({ data, onAccept }) => {
     return (
       <div className="flex-shrink-0 h-full w-[300px] bg-red-500 rounded-xl p-5">
         <div className="flex justify-between items-center">
-          <h3 className="bg-white text-red-600 px-3 py-1 rounded">{task.category}</h3>
+          <h3 className="bg-white text-red-600 px-3 py-1 rounded">
+            {task.category}
+          </h3>
           <h4 className="text-sm">{task.taskDate}</h4>
         </div>
         <h2 className="mt-5 text-xl font-semibold">{task.taskTitle}</h2>
@@ -80,7 +82,9 @@ const NewTask = ({ data, onAccept }) => {
   return (
     <div className="flex-shrink-0 h-full w-[300px] bg-blue-500 rounded-xl p-5">
       <div className="flex justify-between items-center">
-        <h3 className="bg-white text-blue-600 px-3 py-1 rounded">{task.category}</h3>
+        <h3 className="bg-white text-blue-600 px-3 py-1 rounded">
+          {task.category}
+        </h3>
         <h4 className="text-sm">{task.taskDate}</h4>
       </div>
       <h2 className="mt-5 text-xl font-semibold">{task.taskTitle}</h2>
