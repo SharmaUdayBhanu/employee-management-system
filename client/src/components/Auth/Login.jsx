@@ -22,7 +22,7 @@ const Login = ({handleLogin}) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border-b border-gray-300 focus:outline-none focus:border-black bg-transparent"
-              placeholder="Enter your email"
+              placeholder="e@e.com"
               required
             />
           </div>
@@ -32,7 +32,7 @@ const Login = ({handleLogin}) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border-b border-gray-300 focus:outline-none focus:border-black bg-transparent"
-              placeholder="Enter password"
+              placeholder="123"
               required
             />
           </div>
