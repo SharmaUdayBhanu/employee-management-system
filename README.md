@@ -1,5 +1,8 @@
 # Employee Management System
 
+[![Live Site](https://img.shields.io/badge/Live-Demo-green?style=for-the-badge&logo=render)](https://job-portal-client-mtot.onrender.com/)
+
+
 > A full-stack web application for managing employees and their tasks, featuring admin and employee dashboards, real-time task updates, and a modern responsive UI.
 
 ---
@@ -17,6 +20,12 @@
 
 - **Frontend:** React, Vite, Tailwind CSS, Axios
 - **Backend:** Node.js, Express, MongoDB (Atlas), Mongoose
+
+## 🌐 Live Demo
+
+- 👉 **Frontend:** [https://job-portal-client-mtot.onrender.com](https://job-portal-client-mtot.onrender.com)
+- 🛠 **Backend:** Deployed on Render (private endpoint)
+
 
 ## Folder Structure
 
